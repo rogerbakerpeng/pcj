@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 【个性化】评标主动推送报文，TODO 按项目接口文档调整 -->
+<Request>
+  <AppId>{app_id}</AppId>
+  <SectionCode>{section_code}</SectionCode>
+  <Candidates>{candidates}</Candidates>
+</Request>

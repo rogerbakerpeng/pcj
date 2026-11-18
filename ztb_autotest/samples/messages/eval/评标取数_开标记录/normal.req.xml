@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- TODO: 替换为接口日志中真实的（脱敏）请求报文结构 -->
+<Request>
+  <AppId>{app_id}</AppId>
+  <SectionCode>{section_code}</SectionCode>
+</Request>

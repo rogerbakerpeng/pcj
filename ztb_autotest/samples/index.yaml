@@ -1,0 +1,52 @@
+# ============================================================
+# 样本库索引：所有测试用的报文、业务文件、第三方资料都登记在这里。
+# AI 和人都先读本文件，再按需读取具体文件；二进制文件（加密投标文件等）不要读内容，看这里的说明即可。
+#
+# 字段：
+#   id       唯一编号，用例里用它取文件：samples.file("bid_normal_01")
+#   path     相对 samples/ 的路径；TODO 表示还没放进来
+#   source   来源：「测试环境接口日志 2026-11-10 张三」「工具 V8.2 生成」「手写，待录制」
+#   expect   预期结果（业务文件用）：success / reject / TODO；reject 时在 msg 写提示语
+#   desc     一句话说明，写清楚这个样本的特点
+# 新增样本：把文件放到对应目录，在这里加一行；python -m common.samples 可以检查有没有漏登记
+# ============================================================
+
+# ---------- 接口报文（samples/messages/<外部系统>/<接口>/<场景>.req.xml 或 .resp.xml）----------
+# 报文按路径约定读取，这里登记的是说明和来源。req = 请求，resp = 返回。
+messages:
+  - {dep: eval, interface: 获取评标结果, direction: 我们调对方, scenario: normal,       parts: [resp], source: 手写，待录制, desc: 评标完成，3 个候选人}
+  - {dep: eval, interface: 获取评标结果, direction: 我们调对方, scenario: not_finished, parts: [resp], source: 手写，待录制, desc: 评标尚未结束}
+  - {dep: eval, interface: 获取评标结果, direction: 我们调对方, scenario: failed_bid,   parts: [resp], source: 手写，待录制, desc: 流标（有效投标人不足）}
+  - {dep: eval, interface: 获取评标结果, direction: 我们调对方, scenario: rejected,     parts: [resp], source: 手写，待录制, desc: 结果被退回，重新评标}
+  - {dep: eval, interface: 获取评标结果, direction: 我们调对方, scenario: error,        parts: [resp], source: 手写，待录制, desc: 对方系统异常}
+  - {dep: eval, interface: 评标取数_项目信息, direction: 对方调我们, scenario: normal, parts: [req], source: 手写，待录制, desc: 评标取项目和标段信息的请求}
+  - {dep: eval, interface: 评标取数_投标人,   direction: 对方调我们, scenario: normal, parts: [req], source: 手写，待录制, desc: 评标取投标人名单的请求}
+  - {dep: eval, interface: 评标取数_开标记录, direction: 对方调我们, scenario: normal, parts: [req], source: 手写，待录制, desc: 评标取开标记录的请求}
+  - {dep: eval, interface: 评标主动推送,     direction: 对方调我们, scenario: normal, parts: [req], source: 手写，待录制, desc: 评标结束后推送结果（可选功能）}
+
+# ---------- 业务文件（samples/files/<类别>/...）----------
+# 类别：tender 招标文件 / bid 投标文件 / doc 文档类样本（Word、PDF，如文档控件保存后的文件）
+files:
+  # 招标文件
+  - {id: tender_01,       category: tender, path: files/tender/TODO.zbj,            source: TODO, desc: 一个标段的招标文件}
+  # 投标文件：正常和各种异常
+  - {id: bid_normal_01,   category: bid, path: files/bid/normal/TODO_1.tbj,          expect: success, source: TODO, desc: 正常投标文件（投标人 1）}
+  - {id: bid_normal_02,   category: bid, path: files/bid/normal/TODO_2.tbj,          expect: success, source: TODO, desc: 正常投标文件（投标人 2）}
+  - {id: bid_normal_03,   category: bid, path: files/bid/normal/TODO_3.tbj,          expect: success, source: TODO, desc: 正常投标文件（投标人 3）}
+  - {id: bid_unsigned,    category: bid, path: files/bid/unsigned/TODO.tbj,          expect: reject, msg: 未签章,         source: TODO, desc: 未签章}
+  - {id: bid_expired,     category: bid, path: files/bid/expired_cert/TODO.tbj,      expect: reject, msg: 证书已过期,     source: TODO, desc: 证书过期}
+  - {id: bid_wrong_unit,  category: bid, path: files/bid/wrong_unit_cert/TODO.tbj,   expect: reject, msg: 签章单位不一致, source: TODO, desc: 用了其他单位的证书}
+  - {id: bid_tampered,    category: bid, path: files/bid/tampered/TODO.tbj,          expect: reject, msg: 文件校验失败,   source: TODO, desc: 生成后被篡改}
+  - {id: bid_broken,      category: bid, path: files/bid/broken/TODO.tbj,            expect: reject, msg: 文件格式错误,   source: TODO, desc: 损坏的文件}
+  - {id: bid_old_version, category: bid, path: files/bid/old_version/TODO.tbj,       expect: TODO, source: TODO, desc: 旧版工具生成，兼容策略待确认}
+  - {id: bid_over_price,  category: bid, path: files/bid/over_price/TODO.tbj,        expect: TODO, source: TODO, desc: 报价超最高限价，上传拦截还是开标否决待确认}
+  # 文档类样本
+  # - {id: doc_yqh_word, category: doc, path: files/doc/邀请函.docx, source: 测试环境生成, desc: 文档控件保存的邀请函，用于直接调用保存接口}
+
+# ---------- 第三方资料（samples/third_party/<名称>/...）----------
+# 其他团队或厂商提供、测试时要用到的东西：接口文档、WSDL、测试证书说明、控件保存请求的抓包等。
+# 口令、证书私钥不要放进来；只写「放在哪里、找谁要」。
+third_party:
+  # - {id: eval_wsdl,      name: eval, path: third_party/eval/评标接口.wsdl,       source: 评标团队 2026-11, desc: 评标系统接口定义}
+  # - {id: ntko_save_req,  name: ntko, path: third_party/ntko/保存请求抓包.txt,     source: 测试环境 F12 抓取, desc: 文档控件保存时上传到我们应用的请求，用于脚本重放}
+  # - {id: ca_test_cert,   name: ca,   path: third_party/ca/说明.md,                source: CA 厂商, desc: 测试证书的申请方式和有效期（不放证书文件）}

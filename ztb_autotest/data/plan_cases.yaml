@@ -1,0 +1,11 @@
+# 招标计划 数据驱动用例
+add_valid:
+  - {case: 全部必填正常, unit: AUTO_招标单位, plan_no: AUTO_P001, expect: success}
+field_length:
+  - {case: 招标单位50字, field: unit, length: 50, expect: success}
+  - {case: 招标单位51字, field: unit, length: 51, expect: fail}
+  - {case: 计划编号50字, field: plan_no, length: 50, expect: success}
+  - {case: 计划编号51字, field: plan_no, length: 51, expect: fail}
+required:
+  - {case: 招标单位为空, field: unit}
+  - {case: 项目类型为空, field: project_type}

@@ -1,0 +1,75 @@
+# ztb_autotest 框架清单：哪些文件属于「框架层」，哪些属于「项目层」
+# 升级（python tools/upgrade.py）按这里的分类处理，项目自己的内容不会被覆盖。
+version: "2026.11.14"
+
+# 框架层：所有项目共用，升级时直接替换。项目里不要改这些文件——改了会在升级时被覆盖（升级前会自动备份）。
+# 项目特有的规则写在「项目规则.md」，不要改 AGENTS.md。
+framework:
+  - framework.yaml
+  - AGENTS.md
+  - CLAUDE.md
+  - README.md
+  - .cursor/**
+  - .env.example
+  - .gitignore
+  - pytest.ini
+  - requirements.txt
+  - conftest.py
+  - common/**
+  - tools/**
+  - prompts/**
+  - fixtures/__init__.py
+  - fixtures/ui_fixtures.py
+  - contracts/__init__.py
+  - contracts/README.md
+  - contracts/contract_checker.py
+  - mocks/__init__.py
+  - mocks/README.md
+  - mocks/mock_control.py
+  - docs/需求测试流程.md
+  - docs/各阶段提示词.md
+  - docs/流程图.md
+  - docs/流程图/**
+  - docs/模板/**
+  - docs/个性化接口需求模板.md
+  - docs/交互点清单模板.md
+  - docs/框架升级.md
+  - samples/README.md
+  - requirements/README.md
+  - 用例库/README.md
+  - client/README.md
+
+# 模板层：框架提供初始版本，项目接入后会按本项目补全或修改。
+# 升级时：项目没改过的直接更新；改过的保留项目版本，新模板放到 .framework/pending/ 供对照合并。
+template:
+  - project.yaml
+  - 项目规则.md
+  - pages/**
+  - flows/**
+  - api/**
+  - ws/**
+  - db/**
+  - reconcile/**
+  - data/**
+  - client/**
+  - contracts/**
+  - fixtures/**
+  - mocks/**
+  - samples/index.yaml
+  - samples/messages/**
+  - docs/源码地图.md
+  - docs/改进建议.md
+  - testcases/**
+
+# 项目层：每个项目自己的内容，升级时从不改动（新版本里新增的空目录占位文件会补上）。
+# 没有出现在以上任何一节的文件，一律按项目层处理。
+project:
+  - requirements/**
+  - 用例库/**
+  - testcases/modules/**
+  - samples/files/**
+  - samples/third_party/**
+  - reports/**
+  - .env
+  - .runtime/**
+  - .framework/**

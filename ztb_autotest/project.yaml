@@ -1,0 +1,140 @@
+# ============================================================
+# 本项目配置：ztb_autotest 复制到哪个项目，就按该项目填写本文件
+# TODO 用到再填：运行时只检查本次用例需要的配置；口令不要写在这里，用环境变量提供（见 envs 上方说明）
+# ============================================================
+
+name: TODO 项目名称              # 如：广州交易集团电子交易
+source_project: TODO 源码工程名  # 如：dzjy-guangzhou
+
+# 本项目包含的系统，决定运行 testcases/baseline/ 下哪几组产品基线用例
+#   trade = 交易系统（招标、投标、开标、评标交互）
+#   ywtb  = 一网通办（统一工作台 / 用户中心）
+systems: [trade]
+
+# 可选功能开关（需求文档中有对应需求时再开启）
+features:
+  eval_active_push: false        # 交易系统：评标结束后主动推送结果
+
+# 被测系统源码（只读）：AI 用于回答现状、影响范围，补全接口地址和页面元素；绝不修改源码
+# path 可以是相对路径（相对 ztb_autotest 目录）或绝对路径，**填源码总目录即可**：
+#   ztb_autotest 放在源码工程内部    → path: ..
+#   ztb_autotest 与源码工程同级放置  → path: ../<源码工程名>
+#   直接填绝对路径                   → path: D:/java/git/广州交易集团/zfcg
+source_repos:
+  - name: TODO 源码工程名
+    path: ..
+    modules: {}                  # 可不填：AI 在总目录中自行查找，查到后自动补「业务模块: 子工程目录」，下次直接用
+
+# 代码知识来源：AI 了解「功能现在是怎么实现的」从哪里查。项目接入时确定，索引记在 docs/源码地图.md
+#   type: custom   历史项目，有个性化代码 → 以上面 source_repos 的源码为主；接入时只找公共部分，不全量扫描
+#   type: product  新项目，基本是标准产品、没有或很少个性化代码 → 以产品代码知识为主
+#   product：产品代码知识从哪来（两种都可以填；都没有时 AI 只能靠页面和接口抓包了解产品功能）
+#     source_path   产品源码的本地路径（有源码时）
+#     tool          产品代码知识库工具的名称（如公司提供的产品 MCP 服务，需先在 AI 工具里接好）
+code_knowledge:
+  type: TODO                     # custom / product
+  product:
+    source_path:                 # 例：../epoint-product-src
+    tool:                        # 例：公司产品代码知识库的 MCP 服务名
+
+# ============================================================
+# 环境配置
+#   - 用到什么才检查什么：本次要运行的用例用不到的 TODO 不会拦截
+#   - 口令不写进文件：账号密码用环境变量 ZTB_PWD_<角色大写>；其他位置可写 ${变量名}，
+#     如数据库连接串写 ${ZTB_DB_PWD}，直接设置原始密码即可，特殊字符会自动转义
+#   - deps：本环境对「外部系统」的提供方式，决定带 @pytest.mark.needs 的用例是否运行
+#       mock   用 mock 服务代替（本地自测用；异常场景只能在这里测）
+#       real   接了真实系统（测试环境、联调环境）
+#       manual 只能人工验证（如 NTKO 等浏览器控件）
+#       none   本环境不提供，相关用例自动跳过并标注「转其他环境执行」
+#     依赖为 mock / real 时，其地址配置在 <依赖>_mock / <依赖>_real 一节，如 eval_mock、eval_real
+#   - readonly: true  数据库只读、结束后不清理。多人共用的环境必须开启
+#   - ui：本环境界面上与默认做法不同的地方（默认做法＝开发环境）。页面通用方法按这里的声明分支，
+#     如测试环境接了统一登录写 login: sso。每处差异同时登记在 pages/环境差异.md
+#   - 学习页面通用方法优先用 local；没有本地环境时用 test，所以 test 的地址和至少一个账号要填
+# ============================================================
+envs:
+
+  # ---------- 本地：研发自测，--env local。取消注释并填写 ----------
+  # local:
+  #   trade:
+  #     base_url: http://localhost:8080/TODO
+  #     fetch_ws_url: http://localhost:8080/TODO?wsdl   # 评标调我们取数的接口（用到再填）
+  #   ui:
+  #     login: form                # 登录方式：form 本系统登录页（默认）/ sso 统一登录
+  #   deps:
+  #     eval: mock                 # 评标系统：本地用 mock
+  #     ntko: none                 # 文档控件：本地没有
+  #   eval_mock:                   # python -m mocks.eval_mock_server 启动；本地应用的评标地址指向 url
+  #     url: http://localhost:18080/eval/ws
+  #     control_url: http://localhost:18080/__mock
+  #   db:
+  #     url: mysql+pymysql://user:${ZTB_DB_PWD}@localhost:3306/TODO_db
+  #   accounts:
+  #     agent: {username: TODO, password: TODO}
+  #   data_prefix: AUTO_
+  #   cleanup: true
+  #   readonly: false              # 本地库如果是多人共用的开发库，改为 true
+
+  # ---------- 测试环境：部署后验证真实对接，--env test（默认）----------
+  test:
+    trade:
+      base_url: http://TODO                         # 交易系统地址
+      fetch_ws_url: http://TODO?wsdl                # ① 交易系统提供给评标系统的取数接口（用到再填）
+      push_ws_url: http://TODO?wsdl                 # ③ 接收评标主动推送（eval_active_push 开启时）
+    # ui:
+    #   login: sso                                  # 测试环境与开发环境不同的地方写在这里，例如接了统一登录
+    deps:
+      eval: none                                    # 接入评标交互后改为 real
+      ntko: manual
+    # eval_real:
+    #   url: http://TODO                            # 真实评标系统地址（deps.eval 为 real 时填写）
+    ws_auth:
+      app_id: TODO
+      app_secret: TODO
+
+    # 一网通办（systems 含 ywtb 时取消注释并填写）
+    # portal:
+    #   base_url: http://TODO                       # 用户中心地址
+    #   realname_url: http://TODO                   # 企业中心 > 企业实名认证
+
+    db:
+      url: mysql+pymysql://user:${ZTB_DB_PWD}@TODO-db-host:3306/TODO_db   # 按实际数据库类型调整
+    accounts:
+      # 交易系统角色
+      tenderer:   {username: TODO, password: TODO}  # 招标人
+      agent:      {username: TODO, password: TODO}  # 招标代理
+      supervisor: {username: TODO, password: TODO}  # 监管
+      bidder_1:   {username: TODO, password: TODO}  # 投标人
+      bidder_2:   {username: TODO, password: TODO}
+      bidder_3:   {username: TODO, password: TODO}
+      # 一网通办（按实名等级，systems 含 ywtb 时使用）
+      # enterprise_l0: {username: TODO, password: TODO}   # 企业未认证
+      # enterprise_l1: {username: TODO, password: TODO}
+      # enterprise_l2: {username: TODO, password: TODO}
+      # person_l0:     {username: TODO, password: TODO}   # 自然人未认证
+      # person_l1:     {username: TODO, password: TODO}
+      # person_l2:     {username: TODO, password: TODO}
+    data_prefix: AUTO_
+    cleanup: false
+    readonly: true                 # 共用环境：只查不改，用专用测试项目触发业务后核对数据
+
+  # ---------- 联调环境：真实评标系统 + 工具生成文件（需要时填写）----------
+  uat:
+    trade:
+      base_url: http://TODO
+      fetch_ws_url: http://TODO
+      push_ws_url: http://TODO
+    deps:
+      eval: real
+      ntko: manual
+    eval_real:
+      url: http://TODO
+    accounts: {}
+    data_prefix: AUTO_
+    cleanup: false
+    readonly: true
+
+# 专用测试数据（可选）：自动化只使用这里登记的项目、标段，不碰其他业务数据
+# test_data:
+#   sections: [AUTO_标段编号1, AUTO_标段编号2]

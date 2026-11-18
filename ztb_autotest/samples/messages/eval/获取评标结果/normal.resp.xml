@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- TODO: 用评标系统真实（脱敏）返回报文替换 -->
+<Response>
+  <Code>0</Code>
+  <Message>成功</Message>
+  <EvalStatus>FINISHED</EvalStatus>
+  <Candidates>
+    <Candidate><Rank>1</Rank><BidderName>AUTO_投标人1</BidderName><Score>92.50</Score><Price>1000000.00</Price></Candidate>
+    <Candidate><Rank>2</Rank><BidderName>AUTO_投标人2</BidderName><Score>88.00</Score><Price>1020000.00</Price></Candidate>
+    <Candidate><Rank>3</Rank><BidderName>AUTO_投标人3</BidderName><Score>85.30</Score><Price>990000.00</Price></Candidate>
+  </Candidates>
+  <ReportUrl>http://mock/report.pdf</ReportUrl>
+</Response>

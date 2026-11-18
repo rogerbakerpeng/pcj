@@ -1,0 +1,8 @@
+# 字段级规则：xpath -> 规则。TODO 按接口文档补全
+eval_result_resp:
+  /Response/Code:            {required: true, enum: ["0", "1001", "9999"]}
+  /Response/EvalStatus:      {enum: [FINISHED, EVALUATING, FAILED_BID, REJECTED]}
+  //Candidate/BidderName:    {required: true, max_len: 100}
+  //Candidate/Price:         {pattern: '^\d+(\.\d{1,2})?$'}
+fetch_project_resp:
+  /Response/Code:            {required: true}

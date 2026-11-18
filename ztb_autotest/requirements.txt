@@ -1,0 +1,15 @@
+pytest>=8.0
+pytest-playwright>=0.5
+playwright>=1.45
+requests>=2.31
+zeep>=4.2
+lxml>=5.0
+xmlschema>=3.0
+PyYAML>=6.0
+SQLAlchemy>=2.0
+# 按实际数据库选择驱动：pymysql / oracledb / pyodbc
+pymysql>=1.1
+flask>=3.0
+allure-pytest>=2.13
+# 桌面客户端冒烟（仅 Windows 需要）
+pywinauto>=0.6.8 ; sys_platform == "win32"

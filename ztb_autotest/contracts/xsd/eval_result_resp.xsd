@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- TODO: 按评标系统真实返回报文完善 -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="Response">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="Code" type="xs:string"/>
+        <xs:element name="Message" type="xs:string"/>
+        <xs:element name="EvalStatus" type="xs:string" minOccurs="0"/>
+        <xs:element name="Reason" type="xs:string" minOccurs="0"/>
+        <xs:element name="Candidates" minOccurs="0">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="Candidate" maxOccurs="unbounded">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="Rank" type="xs:positiveInteger"/>
+                    <xs:element name="BidderName" type="xs:string"/>
+                    <xs:element name="Score" type="xs:decimal"/>
+                    <xs:element name="Price" type="xs:decimal"/>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="ReportUrl" type="xs:string" minOccurs="0"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

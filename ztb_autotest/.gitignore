@@ -1,0 +1,12 @@
+__pycache__/
+.pytest_cache/
+reports/allure/
+# 样本库中的大文件和加密文件默认不提交，按团队约定调整
+samples/files/**/*.tbj
+samples/files/**/*.zbj
+*.log
+.env
+.runtime/
+# 框架升级的备份和待合并模板；.framework/installed.json 要提交
+.framework/backup/
+.framework/pending/
