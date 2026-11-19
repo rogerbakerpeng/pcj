@@ -205,7 +205,7 @@ def db(env):
     """数据库访问。只读环境（readonly: true）下只能查询；任何环境都不能改表结构、不能整表修改。"""
     from common.db import DB
     if not env.get("db"):
-        pytest.skip("当前环境未配置数据库")
+        pytest.skip("当前环境未配置数据库（测试环境一般不连库）：查库的断言在本地验证，测试环境从页面或接口核对结果")
     database = DB(require(env, "db.url"), readonly=bool(env.get("readonly", False)))
     _DB_STATE["instance"] = database
     yield database

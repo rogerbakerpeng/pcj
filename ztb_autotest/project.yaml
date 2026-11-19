@@ -98,8 +98,8 @@ envs:
     #   base_url: http://TODO                       # 用户中心地址
     #   realname_url: http://TODO                   # 企业中心 > 企业实名认证
 
-    db:
-      url: mysql+pymysql://user:${ZTB_DB_PWD}@TODO-db-host:3306/TODO_db   # 按实际数据库类型调整
+    # 测试环境不配数据库：脚本一般在本地或跳板机上运行，连不到测试环境的库；功能验证只要地址和账号。
+    # 查库的断言在本地验证，测试环境的结果从页面或接口上核对。
     accounts:
       # 交易系统角色
       tenderer:   {username: TODO, password: TODO}  # 招标人

@@ -119,7 +119,7 @@ def check_db(env):
     from common.config import is_missing, lookup
     url = lookup(env, "db.url")
     if url is None:
-        record(None, "未配置数据库", "需要查库断言的用例会跳过")
+        record(None, "未配置数据库", "测试环境一般不连库，属正常；查库的用例会跳过，改为在本地验证")
         return
     if is_missing(url):
         record(False, "db.url", "仍是 TODO 或环境变量未设置", "填写连接串；密码写成 ${ZTB_DB_PWD} 并设置该环境变量")
