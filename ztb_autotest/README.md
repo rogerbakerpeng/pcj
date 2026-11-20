@@ -68,7 +68,7 @@ pip install -r requirements.txt
 ```
 
 **口令不写进文件**，一律用环境变量：
-- 账号密码：`ZTB_PWD_` + 角色名大写，例如 PowerShell `$env:ZTB_PWD_AGENT="xxx"`
+- 账号密码：`ZTB_PWD_` + 环境名大写 + `_` + 角色名大写，例如 PowerShell `$env:ZTB_PWD_TEST_AGENT="xxx"`；本地和测试环境分开设
 - 数据库密码：连接串里写 `${ZTB_DB_PWD}`，再设置 `$env:ZTB_DB_PWD="原始密码"`；密码中的 `@`、`:` 等字符会自动转义，不用手工处理
 - 其他地址、密钥也可以写成 `${变量名}`
 

@@ -89,11 +89,33 @@ def get_env(project, env_name):
     # 数据库连接串中的 ${变量} 自动做 URL 编码，密码里有 @ : / 等字符也不用手工转义
     if db_url:
         env["db"]["url"] = _expand(str(db_url), url_encode=True)
-    # 账号密码用环境变量覆盖，例如 ZTB_PWD_AGENT，避免把真实密码提交到仓库
+    # 账号密码按环境分开，避免本地的密码被拿去登录测试环境：
+    #   1. ZTB_PWD_<环境>_<角色>，如 ZTB_PWD_TEST_AGENT、ZTB_PWD_LOCAL_AGENT（推荐）
+    #   2. project.yaml 该环境 accounts 里写的 password
+    #   3. ZTB_PWD_<角色>（旧写法，只对 local 环境生效）
     for role, acc in (env.get("accounts") or {}).items():
         if isinstance(acc, dict):
-            acc["password"] = os.getenv(f"ZTB_PWD_{role.upper()}", acc.get("password"))
+            acc["password"] = account_password(env_name, role, acc.get("password"))
+    env["_name"] = env_name
     return env
+
+
+def password_var(env_name, role):
+    """某环境某角色的密码环境变量名，如 ZTB_PWD_TEST_AGENT。"""
+    return f"ZTB_PWD_{env_name.upper()}_{role.upper()}"
+
+
+def account_password(env_name, role, configured=None):
+    value = os.getenv(password_var(env_name, role))
+    if value:
+        return value
+    if not is_missing(configured):
+        return configured
+    if env_name == "local":
+        legacy = os.getenv(f"ZTB_PWD_{role.upper()}")
+        if legacy:
+            return legacy
+    return configured
 
 
 def is_missing(value):
@@ -127,11 +149,23 @@ def require(env, dotted):
     if isinstance(value, dict):
         bad = find_missing(value, dotted)
         if bad:
-            raise EnvNotConfigured("、".join(bad))
+            raise EnvNotConfigured("、".join(_with_password_hint(env, bad)))
         return value
     if is_missing(value):
-        raise EnvNotConfigured(dotted)
+        raise EnvNotConfigured("、".join(_with_password_hint(env, [dotted])))
     return value
+
+
+def _with_password_hint(env, paths):
+    """缺账号密码时，说明应设置哪个环境变量（本环境专用，不会用到其他环境的密码）。"""
+    name = env.get("_name")
+    out = []
+    for p in paths:
+        parts = p.split(".")
+        if name and len(parts) == 3 and parts[0] == "accounts" and parts[2] == "password":
+            p += f"（请设置环境变量 {password_var(name, parts[1])}）"
+        out.append(p)
+    return out
 
 
 def dep_mode(env, dep):

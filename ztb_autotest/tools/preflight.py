@@ -293,7 +293,7 @@ def pick_env(project):
         accounts = [r for r, a in (env.get("accounts") or {}).items()
                     if isinstance(a, dict) and not is_missing(a.get("username")) and not is_missing(a.get("password"))]
         if not accounts:
-            lacks.append("至少一个可登录的账号（accounts 中填用户名，密码用环境变量 ZTB_PWD_<角色大写> 提供）")
+            lacks.append("至少一个可登录的账号（accounts 中填用户名，密码用环境变量 ZTB_PWD_<环境大写>_<角色大写> 提供）")
         if not lacks and not _reachable(url):
             lacks.append("地址已填但访问不到（本地工程未启动，或当前网络到不了该环境）")
         report[name] = lacks
